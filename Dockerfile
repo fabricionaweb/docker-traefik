@@ -31,7 +31,7 @@ FROM base AS build-backend
 ENV CGO_ENABLED=0
 
 # dependencies
-RUN apk add --no-cache build-base git && \
+RUN apk add --no-cache git && \
     apk add --no-cache go --repository=http://dl-cdn.alpinelinux.org/alpine/edge/community
 
 # build dependencies
@@ -61,12 +61,12 @@ WORKDIR /config
 VOLUME /config
 EXPOSE 80 443
 
-# runtime dependencies
-RUN apk add --no-cache tzdata s6-overlay curl
-
 # copy files
 COPY --from=build-backend /build /app
 COPY ./rootfs/. /
+
+# runtime dependencies
+RUN apk add --no-cache tzdata s6-overlay curl
 
 # run using s6-overlay
 ENTRYPOINT ["/init"]
