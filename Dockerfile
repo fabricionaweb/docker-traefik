@@ -12,10 +12,10 @@ ARG VERSION
 ADD https://github.com/traefik/traefik.git#${BRANCH:-v$VERSION} ./
 
 # frontend stage ===============================================================
-# node-sass and quasar dont work with alpine
-FROM public.ecr.aws/docker/library/node:14.16 AS build-frontend
-ENV TZ=UTC
-WORKDIR /src
+FROM base AS build-frontend
+
+# dependencies
+RUN apk add --no-cache nodejs-current && corepack enable
 
 # node_modules
 COPY --from=source /src/webui/package.json /src/webui/yarn.lock ./
