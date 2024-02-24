@@ -23,8 +23,7 @@ RUN yarn install --frozen-lockfile --network-timeout 120000
 
 # frontend source and build
 COPY --from=source /src/webui ./
-RUN yarn build --env production --no-stats && \
-    mv ./static /build
+RUN yarn build --env production --no-stats
 
 # build stage ==================================================================
 FROM base AS build-backend
@@ -44,13 +43,13 @@ COPY --from=source /src/pkg ./pkg
 COPY --from=source /src/internal ./internal
 COPY --from=source /src/integration ./integration
 COPY --from=source /src/webui/embed.go ./webui/
-COPY --from=build-frontend /build ./webui/static
+COPY --from=build-frontend /src/static ./webui/static
 ARG VERSION
 RUN mkdir /build && \
-    go build -ldflags "-s -w \
+    go build -trimpath -ldflags "-s -w \
         -X github.com/traefik/traefik/v2/pkg/version.Version=$VERSION \
         -X github.com/traefik/traefik/v2/pkg/version.BuildDate=$(date -u '+%Y-%m-%d_%I:%M:%S%p')" \
-        -o /build/traefik ./cmd/traefik
+        -o /build/ ./cmd/traefik
 
 # runtime stage ================================================================
 FROM base
