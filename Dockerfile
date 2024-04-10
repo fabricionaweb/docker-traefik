@@ -15,7 +15,7 @@ ADD https://github.com/traefik/traefik.git#${BRANCH:-v$VERSION} ./
 FROM base AS build-frontend
 
 # dependencies
-RUN apk add --no-cache nodejs-current && corepack enable
+RUN apk add --no-cache nodejs yarn
 
 # node_modules
 COPY --from=source /src/webui/package.json /src/webui/yarn.lock ./
