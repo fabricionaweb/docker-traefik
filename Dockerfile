@@ -15,7 +15,8 @@ ADD https://github.com/traefik/traefik.git#${BRANCH:-v$VERSION} ./
 FROM base AS build-frontend
 
 # dependencies
-RUN apk add --no-cache nodejs yarn
+RUN apk add --no-cache nodejs && \
+    apk add --no-cache yarn --repository=http://dl-cdn.alpinelinux.org/alpine/edge/community
 
 # node_modules
 COPY --from=source /src/webui/package.json /src/webui/yarn.lock ./
