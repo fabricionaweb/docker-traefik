@@ -31,7 +31,7 @@ FROM base AS build-backend
 ENV CGO_ENABLED=0
 
 # dependencies
-RUN apk add --no-cache git && \
+RUN apk add --no-cache git libcap-utils && \
     apk add --no-cache go --repository=http://dl-cdn.alpinelinux.org/alpine/edge/community
 
 # build dependencies
@@ -51,7 +51,8 @@ RUN mkdir /build && \
         -X github.com/traefik/traefik/v3/pkg/version.Version=$VERSION \
         -X github.com/traefik/traefik/v3/pkg/version.Codename=cheddar \
         -X github.com/traefik/traefik/v3/pkg/version.BuildDate=$(date -u '+%Y-%m-%d_%I:%M:%S%p')" \
-        -o /build/ ./cmd/traefik
+        -o /build/ ./cmd/traefik && \
+    setcap cap_net_bind_service+eip /build/traefik
 
 # runtime stage ================================================================
 FROM base
