@@ -48,8 +48,9 @@ COPY --from=build-frontend /src/static ./webui/static
 ARG VERSION
 RUN mkdir /build && \
     go build -trimpath -ldflags "-s -w \
-        -X github.com/traefik/traefik/v2/pkg/version.Version=$VERSION \
-        -X github.com/traefik/traefik/v2/pkg/version.BuildDate=$(date -u '+%Y-%m-%d_%I:%M:%S%p')" \
+        -X github.com/traefik/traefik/v3/pkg/version.Version=$VERSION \
+        -X github.com/traefik/traefik/v3/pkg/version.Codename=cheddar \
+        -X github.com/traefik/traefik/v3/pkg/version.BuildDate=$(date -u '+%Y-%m-%d_%I:%M:%S%p')" \
         -o /build/ ./cmd/traefik
 
 # runtime stage ================================================================
