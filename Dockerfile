@@ -41,6 +41,7 @@ RUN go mod download
 # build app
 COPY --from=source /src/cmd ./cmd
 COPY --from=source /src/pkg ./pkg
+COPY --from=source /src/init ./init
 COPY --from=source /src/internal ./internal
 COPY --from=source /src/integration ./integration
 COPY --from=source /src/webui/embed.go ./webui/
