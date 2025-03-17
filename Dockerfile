@@ -1,5 +1,5 @@
 # syntax=docker/dockerfile:1-labs
-FROM public.ecr.aws/docker/library/alpine:3.20 AS base
+FROM public.ecr.aws/docker/library/alpine:3.21 AS base
 ENV TZ=UTC
 WORKDIR /src
 
@@ -15,8 +15,7 @@ ADD https://github.com/traefik/traefik.git#${BRANCH:-v$VERSION} ./
 FROM base AS build-frontend
 
 # dependencies
-RUN apk add --no-cache nodejs && \
-    apk add --no-cache yarn --repository=http://dl-cdn.alpinelinux.org/alpine/edge/community
+RUN apk add --no-cache yarn
 
 # node_modules
 COPY --from=source /src/webui/package.json /src/webui/yarn.lock ./
@@ -32,7 +31,7 @@ ENV CGO_ENABLED=0
 
 # dependencies
 RUN apk add --no-cache git libcap-utils && \
-    apk add --no-cache go --repository=http://dl-cdn.alpinelinux.org/alpine/edge/community
+    apk add --no-cache go --repository=https://dl-cdn.alpinelinux.org/alpine/edge/community
 
 # build dependencies
 COPY --from=source /src/go.mod /src/go.sum ./
